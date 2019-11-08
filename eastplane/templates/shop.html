@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="{% static 'js/jquery-1.11.3.js' %}"></script>
+    <style type="text/css">
+        td,th{
+            padding-right: 50px;
+        }
+        #imgs img{
+            float: left;
+            margin-left: 100px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" style="height: 500px;width: 700px;overflow-y: scroll;margin: 0px auto;">
+        <table >
+            <thead>
+                <th></th>
+                <th>地点</th>
+                <th>时间</th>
+                <th>价格</th>
+                <th>购买数量</th>
+            </thead>
+            <tbody>
+            {% for item in t %}
+                    <tr>
+                        <td>
+                            {{item.id}}
+                        </td>
+                        <td>
+                            {{item.place}}
+                        </td>
+                        <td>
+                            {{item.infor}}
+                        </td>
+                        <td class = 'price'>
+                            {{item.prices}}
+                        </td>
+                        <td>
+                            <button class="reduce">-</button>
+                            <input type="text"value="0" style="width: 40px;" class="num">
+                            <button class="add">+</button>
+                        </td>
+                    </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+<span style="font-size: 26px;font-weight: bold">总价</span>:<input type="text" id="totalprice"><button class="end">结算</button>
+<div id="imgs">
+    <img src="{% static 'image/3d.png' %}">
+    <img src="{% static 'image/bar.png' %}">
+    <img src="{% static 'image/pie.png' %}">
+    <img src="{% static 'image/plot.png' %}">
+</div>
+</body>
+<script>
+    $(function () {
+        {#console.log(dataList)#}
+        nums = $('.num')
+        redu = $('.reduce').each(function (index,obj) {
+            $(obj).click(function () {
+                if ($(obj).next().val() == 0){
+                    return
+                }
+                $(obj).next().val($(obj).next().val()-1)
+                var dataList=new Array()
+                var numList=new Array()
+                var total = 0
+                $('.price').each(function (i,index) {
+                    dataList.push(parseInt($(index).html()))
+                })
+                $('.num').each(function (i,index) {
+                    numList.push(parseInt($(index).val()))
+                })
+                for(var i =0;i<numList.length;i++){
+                    total=total+numList[i]*dataList[i]
+                }
+                $('#totalprice').val(total)
+                })
+            })
+        add = $('.add').each(function (index,obj) {
+        $(obj).click(function () {
+            $(obj).prev().val(parseInt($(obj).prev().val())+1)
+            var dataList=new Array()
+            var numList=new Array()
+            var total = 0
+            $('.price').each(function (i,index) {
+                dataList.push(parseInt($(index).html()))
+            })
+            $('.num').each(function (i,index) {
+                numList.push(parseInt($(index).val()))
+            })
+            for(var i =0;i<numList.length;i++){
+                total=total+numList[i]*dataList[i]
+            }
+            $('#totalprice').val(total)
+
+        })
+        })
+    $('.end').click(function () {
+        var dataList=new Array()
+        var numList=new Array()
+        var total = 0
+        $('.price').each(function (i,index) {
+            dataList.push(parseInt($(index).html()))
+        })
+        $('.num').each(function (i,index) {
+            numList.push(parseInt($(index).val()))
+        })
+        for(var i =0;i<numList.length;i++){
+            total=total+numList[i]*dataList[i]
+        }
+        $('#totalprice').val(total)
+    })
+    })
+</script>
+</html>

@@ -1,0 +1,202 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    font-size: 12px;
+    list-style: none;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+a:hover{
+    color: #137e80;
+}
+
+#nav{
+    padding-top: 10px;
+    width: 1550px;
+    padding-bottom: 10px;
+    background: #223C61;
+}
+#nav a{
+    color: white;
+}
+#nav a:hover{
+    color: #ff40a3;
+}
+.lphone{
+    margin-left: 60px;
+    float: left;
+}
+.rphone{
+    float: left;
+    margin-left: 20px;
+    margin-right: 40px;
+}
+.left-nav{
+    float: left;
+}
+.left-nav .link{
+    float: left;
+    margin-right: 20px;
+}
+.left-nav .link a{
+    text-decoration: none;
+}
+.right-nav{
+    float: right;
+}
+
+.right-nav li{
+    float: left;
+    margin-right: 60px;
+}
+.right-nav li a{
+    text-decoration: none;
+}
+#menu{
+    width: 1600px;
+    height: 150px;
+    line-height: 150px;
+
+}
+#menu .logo{
+    margin-left: 60px;
+}
+#menu .menu-right{
+    float: right;
+    margin-right: 200px;
+}
+#menu .menu-right li{
+    float: left;
+    margin-right: 30px;
+    line-height: 150px;
+}
+#menu .menu-right li a{
+    font-size: 16px;
+    color: black;
+}
+#menu .menu-right li a:hover{
+    color: #4cd1ff;
+}
+
+.infor li{
+    width: 130px;
+    height: 100px;
+    background: #223c61;
+    line-height: 100px;
+    text-align: center;
+    border-bottom: 1px solid white;
+}
+
+.infor a li{
+    color: white;
+    font-size: 16px;
+    transition: 1.2s;
+}
+.infor a li:hover{
+    background: #8cff34;
+}
+.choose{
+    float: left;
+    margin-left: 50px;
+}
+.choose li{
+    float: left;
+    margin-left: 100px;
+}
+.choose a{
+    font-size: 20px;
+}
+input{
+    height: 30px;
+    padding-left: 5px;
+    border:1px black solid;
+    border-radius:3px;
+    border-color: rgba(0,0,0,0.3);
+    margin-top: 5px;
+    width: 270px;
+}
+.msg label{
+    color: #666666;
+}
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
+dt{
+    margin-bottom: 20px;
+}
+input[type="submit"]{
+    margin-top: 30px;
+    height: 40px;
+    background: #CB1D36;
+    font-size: 30px;
+    color: white;
+}
+form{
+    position: absolute;
+    left: 470px;
+    top: 80px;
+    width: 700px;
+}
+.select a span{
+    display: inline-block;
+    height:26px;
+    width: 70px;
+    border: 1px solid rgba(0,0,0,0.3);
+    text-align: center;
+    line-height: 30px;
+    border-radius: 1px;
+}
+.planeDynamic li{
+    float: left;
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-top: 20px;
+}
+.planeDynamic a{
+    font-size: 20px;
+    height:404px ;
+}
+.enter-port span,#me span{
+    padding-left: 60px;
+}
+.tr{
+    height: 40px;
+    border: 1px solid rgba(0,0,0,0.3);
+    border-radius: 1px;
+    text-align: center;
+    line-height: 40px;
+    margin-bottom: 10px;
+}
+.east-finance{
+    float: left;
+}
+.east-finance ul{
+    float: left;
+    margin-top: 50px;
+}
+.east-finance ul li{
+    float: left;
+    margin-right: 200px;
+    height: 50px;
+}
+.east-finance ol{
+    height: 100px;
+}
+.east-finance ol li{
+    float: left;
+    margin-right: 150px;
+}
+.east-finance ol li img{
+    width: 100px;
+    height: 100px;
+}
+
+
+
+
+

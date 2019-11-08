@@ -1,0 +1,400 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="{% static 'js/vue.min.js'%} "></script>
+    <script src="{% static 'js/jquery-1.11.3.js' %}">
+    </script>
+    <title>航空公司</title>
+    <link rel="stylesheet" href="{% static 'css/plane.css'%}">
+</head>
+<body>
+    <div id="nav" style="overflow: hidden">
+        <span class="lphone" style="color: red;">服务热线:10086</span>
+        <span class="rphone" style="color:red;">在线客服</span>
+            <ul class="left-nav">
+                <li class="link"><a href="#">投诉建议</a></li>
+                <li class="link"><a href="#">微信</a></li>
+                <li class="link"><a href="#">微博</a></li>
+                <li class="link"><a href="#">特色产品</a></li>
+                <li class="link"><a href="#">友情链接</a></li>
+                <li class="link"><a href="#">Language</a></li>
+            </ul>
+        <ul class="right-nav">
+            {% if not use %}
+                <li class="register"><a href="{% url 'register' %}">注册</a></li>
+                <li> | </li>
+                <li class="login"><a href="{% url 'login' %}">登录</a></li>
+            {% else %}
+                <li class="register"><a>欢迎:{{ use.username }}</a></li>
+                <li> | </li>
+                <li class="login"><a href="{% url 'logout' %}">退出</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <div id="menu">
+        <div class="logo" style="float: left;">
+            <a href="#"><img src="{% static 'image/logo.png'%}" alt="中国东方航空" style="width: 200px;height: 44px;"></a>
+            <a href="#"><img src="{% static 'image/logo2.png'%}" alt="天合联盟" style="width: 50px;height: 44px;"></a>
+            <a href="#"><img src="{% static 'image/logo3.png'%}" alt="惠价直销" style="width: 70px;height: 64px;"></a>
+        </div>
+        <ul class="menu-right">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">会员服务</a></li>
+            <li><a href="#">自助服务</a></li>
+            <li><a href="#">积分商城</a></li>
+            <li><a href="#">旅行信息</a></li>
+            <li><a href="#">旅游度假</a></li>
+            <li><a href="#">旅行保证</a></li>
+            <li><a href="#">各国签证</a></li>
+        </ul>
+    </div>
+    <div id="buy-tickets" style="width: 1600px;position: relative;background: url('{% static "image/background.jpg"%}');height:470px;padding: 50px 0px;">
+        <div class="form-data" style="margin: 0 auto;background: white;width: 1000px;">
+            <ul class="infor" style="float: left;">
+                <a href="#" v-on:click="buy"><li>搜索机票</li></a>
+                <a href="#" v-on:click="Dynamic"><li>航班动态</li></a>
+                <a href="{% url 'shopping' %}"><li>购买机票</li></a>
+                <a href="#" v-on:click="east"><li>东航金融</li></a>
+            </ul>
+        <template v-if = "nav==='east'">
+                <h2 style="font-size: 20px;float: left;margin-left: 20px;margin-top: 20px;padding-bottom: 20px;border-bottom: 1px solid black;width: 800px;">东航金融</h2>
+                <div class="east-finance">
+                    <ul>
+                        <li style="margin-left: 100px;">汇添富</li>
+                        <li>东航金融</li>
+                        <li>航联保险</li>
+                    </ul>
+                    <div style="clear: both;"></div>
+                    <ol>
+                        <li style="margin-left: 95px;"><img src="{% static 'image/getmoney.jpg'%}" alt=""></li>
+                        <li><img src="{% static 'image/getmoney.jpg'%}" alt=""></li>
+                        <li><img src="{% static 'image/getmoney.jpg'%}" alt=""></li>
+                    </ol>
+                    <div style="clear: both;"></div>
+                    <h1 style="font-size: 30px; text-align: center;margin-top: 40px;">欢迎来到大浙江航空公司</h1>
+                </div>
+        </template>
+        <template v-else-if = "nav==='dynamic'">
+            <ul class="planeDynamic"style="margin-bottom: 20px;height: 80px;">
+                <li style="margin-right: 200px;margin-left: 150px;"><a v-on:click = "changecolor"v-bind:style="{'color':tbackground}" href="#"> 航班时刻表</a></li>
+                <li><a v-on:click ="change_color" href="#" v-bind:style="{'color':kbackground}"> 航班动态</a></li>
+            </ul>
+            <template v-if = "state === 'time-schedule'">
+                <div class="select"style="margin-bottom: 3px;">
+                    <a href="#"><span style="margin-left: 20px;margin-right: 5px;"v-on:click = "getcolor"v-bind:style="{'background':jbackground}">进港</span></a>
+                    <a href="#"><span v-on:click ="leavecolor" href="#" v-bind:style="{'background':lbackground}">离港</span></a>
+                    <input type="text" id="place" style="float: right;height: 20px;width: 200px;"placeholder="北京(首都)">
+                    <label for="place"style="float: right;margin-top: 8px;margin-right: 5px;">当前机场</label>
+                </div>
+                <div class="tr" id="me">
+                    <span>航班</span>
+                    <span>状态</span>
+                    <span>始发地</span>
+                    <span>计划到达</span>
+                    <span>实际到达</span>
+                    <span>到达航站楼</span>
+                    <span>行李转盘</span>
+                </div>
+                <div class="enter-port" style="height: 200px;overflow-y: scroll;">
+                    <template v-if="plane==='get-in'">
+                        {% for i in get %}
+                        <div class="tr">
+                            <span style="padding-left: 50px;">{{  i.flight }}</span>
+                            <span style="padding-left: 40px">{{  i.status }}</span>
+                            <span>{{  i.beginPlace }}</span>
+                            <span>{{ i.planarrtime }}</span>
+                            <span style="padding-left: 80px">{{ i.arrtime }}</span>
+                            <span style="padding-left: 100px">{{ i.arrplace }}</span>
+                            <span style="padding-left: 80px">{{ i.bagplace }}</span>
+                        </div>
+{#                        <div class="tr" style="padding-left: 40px">#}
+{#                            <span style="padding-left: 10px;">MU2974</span>#}
+{#                            <span style="padding-left: 40px">未起飞</span>#}
+{#                            <span>临沂</span>#}
+{#                            <span>0:20:00</span>#}
+{#                            <span style="padding-left: 80px">待定</span>#}
+{#                            <span style="padding-left: 100px">T2</span>#}
+{#                            <span style="padding-left: 80px">待定</span>#}
+{#                        </div>#}
+{#                        <div class="tr"style="padding-left: 40px">#}
+{#                            <span style="padding-left: 10px;">MU2036</span>#}
+{#                            <span style="padding-left: 40px">未起飞</span>#}
+{#                            <span>昆明</span>#}
+{#                            <span>0:20:00</span>#}
+{#                            <span style="padding-left: 80px">待定</span>#}
+{#                            <span style="padding-left: 100px">T2</span>#}
+{#                            <span style="padding-left: 80px">待定</span>#}
+{#                        </div>#}
+{#                        <div class="tr"style="padding-left: 40px">#}
+{#                            <span style="padding-left: 10px;">MU5166</span>#}
+{#                            <span style="padding-left: 40px">未起飞</span>#}
+{#                            <span>连云港</span>#}
+{#                            <span>0:35:00</span>#}
+{#                            <span style="padding-left: 80px">待定</span>#}
+{#                            <span style="padding-left: 100px">T2</span>#}
+{#                            <span style="padding-left: 80px">待定</span>#}
+{#                        </div>#}
+{#                        <div class="tr"style="padding-left: 40px">#}
+{#                            <span style="padding-left: 10px;">MU9792</span>#}
+{#                            <span style="padding-left: 40px">未起飞</span>#}
+{#                            <span>大连</span>#}
+{#                            <span>0:25:00</span>#}
+{#                            <span style="padding-left: 80px">待定</span>#}
+{#                            <span style="padding-left: 100px">T2</span>#}
+{#                            <span style="padding-left: 80px">待定</span>#}
+{#                        </div>#}
+                        {% endfor %}
+                    </template>
+                    <template v-else>
+                        {% for i in leave %}
+                        <div class="tr">
+                            <span style="padding-left: 50px;">{{ i.flight }}</span>
+                            <span style="padding-left: 40px">{{ i.status }}</span>
+                            <span>{{ i.beginPlace }}</span>
+                            <span>{{ i.planarrtime }}</span>
+                            <span style="padding-left: 80px">{{ i.arrtime }}</span>
+                            <span style="padding-left: 100px">{{ i.arrplace }}</span>
+                            <span style="padding-left: 80px">{{ i.bagplace }}</span>
+                        </div>
+                        {% endfor %}
+{#                        <div class="tr" style="padding-left: 40px">#}
+{#                            <span style="padding-left: 10px;">FM9158</span>#}
+{#                            <span style="padding-left: 40px">已到达</span>#}
+{#                            <span>杭州</span>#}
+{#                            <span>6:20:00</span>#}
+{#                            <span style="padding-left: 80px">6:38:00</span>#}
+{#                            <span style="padding-left: 100px">T2</span>#}
+{#                            <span style="padding-left: 80px">63</span>#}
+{#                        </div>#}
+{#                        <div class="tr"style="padding-left: 40px">#}
+{#                            <span style="padding-left: 10px;">MU2129</span>#}
+{#                            <span style="padding-left: 40px">已到达</span>#}
+{#                            <span>兰州</span>#}
+{#                            <span>6:25:00</span>#}
+{#                            <span style="padding-left: 80px">6:37:00</span>#}
+{#                            <span style="padding-left: 100px">T2</span>#}
+{#                            <span style="padding-left: 80px">67</span>#}
+{#                        </div>#}
+{#                        <div class="tr"style="padding-left: 40px">#}
+{#                            <span style="padding-left: 10px;">MU9724</span>#}
+{#                            <span style="padding-left: 40px">已到达</span>#}
+{#                            <span>大理</span>#}
+{#                            <span>6:40:00</span>#}
+{#                            <span style="padding-left: 80px">7:08:00</span>#}
+{#                            <span style="padding-left: 100px">T2</span>#}
+{#                            <span style="padding-left: 80px">68</span>#}
+{#                        </div>#}
+{#                        <div class="tr"style="padding-left: 40px">#}
+{#                            <span style="padding-left: 10px;">MU2255</span>#}
+{#                            <span style="padding-left: 40px">取消(计划)</span>#}
+{#                            <span>大连</span>#}
+{#                            <span>7:00:00</span>#}
+{#                            <span style="padding-left: 80px">待定</span>#}
+{#                            <span style="padding-left: 100px">-</span>#}
+{#                            <span style="padding-left: 80px">待定</span>#}
+{#                        </div>#}
+                    </template>
+                </div>
+            </template>
+            <template v-else>
+                <div class="select"style="margin-bottom: 3px;">
+                    <a href="#"><span style="margin-left: 20px;margin-right: 5px;"v-on:click = "getcolor"v-bind:style="{'background':jbackground}">按航班号</span></a>
+                    <a href="#"><span v-on:click ="leavecolor" href="#" v-bind:style="{'background':lbackground}">按出发地</span></a>
+                </div>
+                <template v-if = "according === 'num-plane'">
+                     <dt class="left"style="margin-left: 20px;">
+                            <pre style="display: inline">航空公司代码     </pre><label for="num-plane">航班号</label>
+                            <br>
+                         <select name="" id=""style="height: 32px;border-radius: 1px;width: 105px;">
+                             <option value="">MU</option>
+                             <option value="">FM</option>
+                             <option value="">KN</option>
+                             <option value="">FO</option>
+                         </select>
+                         <input type="text" id="num-plane" placeholder="例如:550" name="get-data">
+                     </dt>
+                     <dt class="right"style="margin-right: 100px;">
+                        <label for="begin-date">出发日期</label>
+                        <br>
+                        <input type="text" id="begin-date"name="region"v-bind:value = "dt">
+                    </dt>
+                    <dt class="right"style="margin-right: 100px;margin-top: 100px;">
+                        <input type="submit" value="搜  索">
+                    </dt>
+                </template>
+                <template v-else>
+                     <dt class="left"style="margin-left: 20px;">
+                         <pre style="display: inline;">出发城市                  </pre> <label for="num-plane">到达城市</label>
+                            <br>
+                         <input type="text" id="begin-city" placeholder="例如:上海" name="get-data" style="width: 150px;">
+                         <input type="text" id="array-city" placeholder="例如:北京" name="get-data" style="width: 150px;">
+                     </dt>
+                     <dt class="right"style="margin-right: 100px;">
+                        <label for="begin-date">出发日期</label>
+                        <br>
+                        <input type="text" id="begin-date"name="region"v-bind:value = "dt">
+                    </dt>
+                    <dt class="right"style="margin-right: 100px;margin-top: 100px;">
+                        <input type="submit" value="搜  索">
+                    </dt>
+                </template>
+            </template>
+        </template>
+        <template v-if = "nav==='buytickets'">
+            <ul class="choose">
+                <li><a v-on:click="first" href="#"> 机票</a></li>
+                <li><a v-on:click = "change" href="#"> 办登记牌</a></li>
+                <li><a v-on:click = "hotel" href="#"> 酒店</a></li>
+                <li><a v-on:click ="shuttle" href="#"> 机场接送</a></li>
+            </ul>
+             <template v-if = "name === 'tickets'">
+                <form class="msg" action="" method="post" >
+                    <dt class="left">
+                        <label for="city">出发城市</label>
+                        <br>
+                        <input type="text"placeholder="请输入" id="city"name="begin_city">
+                    </dt>
+                    <dt class="right">
+                        <label for="end">到达城市</label>
+                        <br>
+                        <input type="text"placeholder="请输入" id="end"name="array_city">
+                    </dt>
+                    <dt class="left">
+                        <label for="begin-data">出发日期</label>
+                        <br>
+                        <input type="text"placeholder="请输入" id="begin-data" name="begin-data">
+                    </dt>
+                    <dt class="right">
+                        <label for="end-data">返程日期</label>
+                        <br>
+                        <input type="text"placeholder="请输入" id="end-data" name="reback_data">
+                    </dt>
+                     <dt class="left">
+                        <label for="num-person">乘机人数量</label>
+                         <br>
+                        <input type="text"placeholder="请输入" id="num-person" name="num_person">
+                    </dt>
+                    <dt class="right">
+                        <label for="pay">支付方式</label>
+                        <br>
+                        <input type="text"placeholder="请输入" id="pay" name="what_pay">
+                    </dt>
+                    <dt class="left">
+                        <img src="{% static 'image/getmoney.jpg'%}" alt=""style="width: 150px;height: 120px;">
+                    </dt>
+                    <dt class="right">
+                        <input type="submit" value="搜  索">
+                    </dt>
+                </form>
+            </template>
+            <template v-if = "name === 'get_tickets'">
+                <form action="" method="post"class="get_tickets"style="height: 370px;">
+                    <dt class="left">
+                        <label for="idcard">票号/证件号</label>
+                        <br>
+                        <input type="text" id="idcard" placeholder="请输入身份证号..."name="ID">
+                    </dt>
+                    <dt class="right">
+                        <label for="byplane">乘机人</label>
+                        <br>
+                        <input type="text" id="byplane"placeholder="请输入订票时的姓名"name="names">
+                    </dt>
+                    <dt class="left" style="color: #666666;">温馨提示：婴儿、特殊旅客请直接前往机场柜面办理</dt>
+                    <input type="submit"value="去选座" style="margin-top: 200px;margin-left: 434px;"name="select-position">
+                </form>
+            </template>
+            <template v-if = "name === 'hotel'">
+                <form action=""method="post">
+                     <dt class="left">
+                        <label for="get-in_data">入住日期</label>
+                        <br>
+                        <input type="text" id="get-in_data" v-bind:value="dt"name="get-data">
+                     </dt>
+                     <dt class="right">
+                        <label for="region">城市/地区</label>
+                        <br>
+                        <input type="text" id="region"name="region">
+                    </dt>
+                     <dt class="left">
+                        <label for="away-data">退房日期</label>
+                        <br>
+                        <input type="text" id="away-data"v-bind:value = "dt"name="away-data">
+                    </dt>
+                    <dt class="right">
+                        <br>
+                        <input type="text" v-bind:value="date| formatDate" name="ytime"style="border: 0px;text-align: center">
+                    </dt>
+                    <input type="submit"value="搜索" style="margin-top: 150px;margin-left: 434px;"name="search">
+                </form>
+            </template>
+            <template v-if = "name === 'shuttle'">
+                <form action=""method="post">
+                    <div class="select"style="margin-bottom: 20px;">
+                        <a href="#"><span class="send" v-on:click = "changecolor"v-bind:style="{'background':gbackground}">接机</span></a>
+                        <a href="#"><span class="get" v-on:click = "change_color"v-bind:style="{'background':sbackground}">送机</span></a>
+                    </div>
+                    <template v-if = "destination=='get-people'">
+                        <dt class="left">
+                            <label for="begin-place">出发地点</label>
+                            <br>
+                            <input type="text" id="begin-place" value="杭州"name="begin-place">
+                         </dt>
+                         <dt class="right">
+                            <label for="send-airport">送机机场</label>
+                            <br>
+                            <input type="text" id="send-airport" name="send-place">
+                        </dt>
+                        <dt class="left">
+                            <label for="date">日期</label>
+                            <br>
+                            <input type="text" id="date" v-bind:value="dt"name="ydate">
+                         </dt>
+                        <dt class="right">
+                            <label for="time">时间</label>
+                            <br>
+                            <input type="text" id="time" v-bind:value="time|changeTime"name="ytime">
+                         </dt>
+                    </template>
+                    <template v-else>
+                         <dt class="left">
+                            <label for="get-place">接机机场</label>
+                            <br>
+                            <input type="text" id="get-place" value="大浙江"name="begin-place"style="width: 130px;margin-right: 30px;">
+                         </dt>
+                         <dt class="left">
+                            <label for="num-trip">航班号</label>
+                            <br>
+                            <input type="text" id="num-trip" name="send-place"style="width: 130px;margin-right: 30px;"placeholder="例如:MH370">
+                        </dt>
+                        <dt class="left">
+                            <label for="arr-place">到达地点</label>
+                            <br>
+                            <input type="text" id="arr-place" value="长春"name="begin-place"style="width: 350px;"placeholder="到达城市">
+                         </dt>
+                         <dt class="left">
+                            <label for="dates">日期</label>
+                            <br>
+                            <input type="text" id="dates" v-bind:value="dt"name="ydate">
+                         </dt>
+                        <dt class="right">
+                            <label for="times">时间</label>
+                            <br>
+                            <input type="text" id="times" v-bind:value="time|changeTime"name="ytime">
+                         </dt>
+                    </template>
+                    <input type="submit"value="搜索" style="margin-top: 100px;margin-left: 434px;">
+                </form>
+            </template>
+        </template>
+        <div style="clear: both;"></div>
+        </div>
+
+    </div>
+</body>
+<script src="{% static 'js/plane.js' %}">
+</script>
+</html>
